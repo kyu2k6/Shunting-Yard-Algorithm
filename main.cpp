@@ -2,6 +2,8 @@
 //3-17-23
 //Shunting Yard Algorithm creates binary tree for prefix infix postfix
 
+//MAKE SURE TO SET NON USED LINKED LIST SPOTS AS NULL OR ITS ERROR
+
 #include <iostream>
 #include <cstring>
 #include "node.h"
