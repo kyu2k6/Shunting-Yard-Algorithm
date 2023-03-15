@@ -10,8 +10,8 @@ using namespace std;
 
 void push(Node*& top, char* value); //add
 void pop(Node*& top); //remove
-void peek(); //print
-void enqueue(); //add
+void peek(); 
+void enqueue(Node*& front, Node*& back, char* value); //add
 void dequeue(); //remove
 int precedence(char* p);
 
@@ -25,7 +25,7 @@ int main() {
 	Node* front = NULL;
 	Node* back = NULL;
 
-	char* table = new char [100];
+	char** table = new char * [100];
 	
 	char expression[100];
 	char notation[20];
@@ -38,11 +38,33 @@ int main() {
 	//take from input and put in table
 	for (int i = 0; i < strlen(expression); i++) {
 		if (expression[i] != ' ') {
-			table[index] = expression[i];
+			char* tmp = new char[1];
+			tmp[0] = expression[i];
+			table[index] = tmp;
 			index++;
-			cout << expression[i] << endl;
 		}
 	}
+	int count = 0;
+	/*
+	while (count < index) {
+		//if (precedence(table[index]) == 0) { //If token is a number
+                    enqueue(front, back, table[index]);
+                }
+                if (precedence(table[index]) == 1 || precedence(table[index]) == 2 || precedence(table[index]) == 3) { //If token is a operator
+                    if (top != NULL) {
+                        while (precedence(top->getValue()) >= precedence(table[index]) && *top->getValue() != '(') {
+                            enqueue(front, back, top->getValue()); 
+                            pop(top);
+                            if (top == NULL) {
+                                break;
+                            }
+                        }
+                    }
+                    push(top, table[index]); 
+                }
+		count++;
+	}
+	*/
 
 }
 
@@ -64,6 +86,20 @@ void pop(Node*& top) { //Pop function
     }
 }
 
+void enqueue(Node*& front, Node*& back, char* value) { //Enqueue function
+    Node* temp = new Node();
+    temp->setValue(value);
+    temp->setNext(NULL);
+    if (front == NULL) { //No nodes yet
+        front = temp;
+        back = temp;
+    }
+    else { //At least one node exists
+        back->setNext(temp);
+        back = temp;
+    }
+}
+
 int precedence(char* p) {
     if (*p == '^') {
         return 3; //Highest
@@ -75,7 +111,7 @@ int precedence(char* p) {
         return 1; //Second lowest
     }
     else if (*p == '(' || *p == ')') {
-        return 5; //Can be anything, as long as it is differentiated from the rest
+        return 4; //Can be anything, as long as it is differentiated from the rest
     }
     else {
         return 0; //Lowest, which are the numbers
