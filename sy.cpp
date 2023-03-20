@@ -7,7 +7,8 @@ using namespace std;
 int order(char input);
 void enqueue(Node*& headQ, char newvalue);
 void print(Node* head);
-void stack(Node*& headS, char newvalue);
+void stack(Node*& headS, char newvalue, Node*& headQ);
+void pop(Node*& headS, Node*& headQ);
 
 int main() {
 	Node* headS = NULL;
@@ -26,14 +27,23 @@ int main() {
 				enqueue(headQ, input[i]);
 			}		
 			else {
-				stack(headS, input[i]);
+				stack(headS, input[i], headQ);
 			}
 		}
 	}
-	enqueue(headQ, headS->value);
+	
+	//everything left in stack
+	while (headS != NULL) {
+		pop(headS, headQ);
+	}
 
 	print(headQ);
-	print(headS);
+}
+void pop(Node*& headS, Node*& headQ) {
+	enqueue(headQ, headS->value);
+	Node* temp = headS;
+	headS = headS -> next;
+	delete temp;
 }
 
 void enqueue(Node*& headQ, char newvalue) {
@@ -52,17 +62,44 @@ void enqueue(Node*& headQ, char newvalue) {
 	}
 }
 
-void stack(Node*& headS, char newvalue) {
-	Node* n = new Node();
-	n->setValue(newvalue);
-	n->setNext(headS);
-	headS = n;
+void stack(Node*& headS, char newvalue, Node*& headQ) {
+	if (headS == NULL) {
+		Node* n = new Node();
+		n -> setValue(newvalue);
+		n -> setNext(NULL);
+		headS = n;
+	}
+	else {	//if no has paranthesis
+		if (order(newvalue) != 4) {
+			if ((order(newvalue) <= order(headS->value)) && (order(headS -> value) != 4)) {
+				pop(headS, headQ);
+				stack(headS, newvalue, headQ);
+			}
+			else {
+				//only if incoming is bigger than current top value
+				Node* n = new Node();
+				n->setValue(newvalue);
+				n->setNext(headS);
+				headS = n;
+			}
+		}//if has 
+		else {
+			if (newvalue == ')') {
+				while (headS->value != '(') {
+					pop(headS, headQ);
+				}
+				Node* temp = headS;
+				headS = headS -> next;
+				delete temp;
+			}	
+		}
+	}
 }
 
-void print(Node*headQ){
-	Node* temp = headQ;
+void print(Node*head){
+	Node* temp = head;
 	if (temp != NULL) {
-		cout << "List: ";
+		cout << "Postfix: ";
 		while(temp != NULL) {
 			cout << temp -> value << " ";
 			temp = temp -> next;
