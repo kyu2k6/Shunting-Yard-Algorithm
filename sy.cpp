@@ -184,12 +184,12 @@ void pushTree(Node*& tree, Node*& temp) {
             		tree = temp;
         	}
         	else { //If token is operator
-            		Node* left = tree;
+            		Node* right = tree;
             		popTree(tree);
-            		left->setNext(NULL);
-           		Node* right = tree;
+            		right->setNext(NULL);
+           		Node* left = tree;
             		popTree(tree);
-           		right->setNext(NULL);
+           		left->setNext(NULL);
             		temp->setNext(tree);
             		tree = temp;
             		tree->setLeft(left);
