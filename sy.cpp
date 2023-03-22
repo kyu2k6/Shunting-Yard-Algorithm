@@ -1,3 +1,8 @@
+//Kevin Yu
+//3-19-22
+//Postifx Infix, Prefix
+//With assitance from Nathan Zou on the binary tree expression area
+
 #include <iostream>
 #include "node.h"
 #include <cstring>
